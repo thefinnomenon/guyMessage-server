@@ -1,7 +1,7 @@
-defmodule ChatWeb.PageController do
+defmodule ChatWeb.ChatController do
   use ChatWeb, :controller
 
   def index(conn, _params) do
-    render conn, "index.html"
+    render conn, "chat.html"
   end
 end

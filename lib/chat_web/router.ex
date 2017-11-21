@@ -13,14 +13,22 @@ defmodule ChatWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", ChatWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
+  pipeline :secure_api do
+    plug Chat.VerifySession
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ChatWeb do
-  #   pipe_through :api
-  # end
+  scope "/", ChatWeb do
+    pipe_through :browser
+
+    get "/", AuthController, :index
+    post "/auth", AuthController, :login
+    get "/auth/logout", AuthController, :logout
+  end
+
+  scope "/chat", ChatWeb do
+    pipe_through :browser
+    pipe_through :secure_api
+
+    get "/", ChatController, :index
+  end
 end

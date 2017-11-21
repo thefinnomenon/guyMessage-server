@@ -1,0 +1,27 @@
+<div class="chat container">
+  <input type="text" id="username-input" class="form-control" placeholder="Enter username...">
+  <div id="button" class="btn btn-primary">Login</div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#button").click(function() {
+      var CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
+      var username = $("#username-input").val();
+
+      $.ajax({
+        url: "/auth",
+        type: "post",
+        data: {
+          username: username
+        },
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRF-Token", CSRF_TOKEN);
+        },
+        success: function (data) {
+          window.location = "/chat";
+        }
+      });
+    });
+  });
+</script>

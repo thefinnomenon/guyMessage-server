@@ -1,4 +1,4 @@
-defmodule Chat.Repo.Migrations.AddChatTables do
+defmodule Chat.Repo.Migrations.CreateTables do
   use Ecto.Migration
 
   def change do
@@ -18,7 +18,7 @@ defmodule Chat.Repo.Migrations.AddChatTables do
     create table(:participants, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :conversation_id, references(:conversations, on_delete: :delete_all, type: :uuid)
-      add :user_id, :binary_id
+      add :user_id, references(:users, on_delete: :delete_all, type: :uuid)
 
       timestamps()
     end

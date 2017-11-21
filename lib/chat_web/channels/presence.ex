@@ -68,6 +68,16 @@ defmodule ChatWeb.Presence do
   information, while maintaining the required `:metas` field from the
   original presence data.
   """
-  use Phoenix.Presence, otp_app: :chat,
-                        pubsub_server: Chat.PubSub
+  use Phoenix.Presence, otp_app: :chat, pubsub_server: Chat.PubSub
+
+  alias Chat.Accounts
+
+  def fetch(_topic, entries) do
+    users = entries |> Map.keys() |> Accounts.get_users_map
+    # => %{"123" => %{name: "User 123"}, "456" => %{name: nil}}
+
+    for {key, %{metas: metas}} <- entries, into: %{} do
+      {key, %{metas: metas, user: users[key]}}
+    end
+  end
 end

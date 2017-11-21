@@ -1,8 +1,17 @@
 <div class="chat container">
+  <div class="col-md-3">
+    <div class="panel panel-default chat-room">
+      <div class="panel-heading">
+        Conversations
+      </div>
+      <div class="panel-body panel-users" id="conversations">
+      </div>
+    </div>
+  </div>
   <div class="col-md-9">
     <div class="panel panel-default chat-room">
       <div class="panel-heading">
-        Hello
+        Hello <%= cookies(@conn, "username") %> <a href="../auth/logout">Logout</a>
       </div>
       <div id="chat-messages" class="panel-body panel-messages">    
       </div>
@@ -20,3 +29,6 @@
     </div>
   </div>
 </div>
+
+<script>window.userToken = "<%= cookies(@conn, "user_token") %>"</script>
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
