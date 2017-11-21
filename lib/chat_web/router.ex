@@ -23,6 +23,7 @@ defmodule ChatWeb.Router do
     get "/", AuthController, :index
     post "/auth", AuthController, :login
     get "/auth/logout", AuthController, :logout
+    get "/users", AuthController, :get_user_list
   end
 
   scope "/chat", ChatWeb do

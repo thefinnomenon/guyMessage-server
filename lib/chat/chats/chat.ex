@@ -7,6 +7,7 @@ defmodule Chat.Chats.Chat do
   alias Chat.Repo
   alias Phoenix.Token
 
+  alias Chat.Accounts.User
   alias Chat.Chats.{Conversation, Participant, Message}
 
   require Logger

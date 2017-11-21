@@ -16,6 +16,14 @@ defmodule ChatWeb.AuthController do
   end
 
   @doc """
+  Retrieves a list of users
+  """
+  def get_user_list() do
+    Repo.all(User)
+    |> Enum.map(fn(user) -> %{:id => user.id, :username => user.username} end)
+  end
+
+  @doc """
    Retrieve the user_id associated with the username (create a user entry if necessary). 
    Return a Phoenix token for the user
   """
@@ -31,7 +39,7 @@ defmodule ChatWeb.AuthController do
             resp.id |> send_access_token(username, conn)
           {:error, reason}  -> conn |> put_flash(:error, "Please try again") |> render("index.html")
         end
-      user_id -> user_id |> send_access_token(username, conn)
+      user_id -> user_id |> UUID.binary_to_string! |> send_access_token(username, conn)
     end
   end
 
@@ -46,7 +54,6 @@ defmodule ChatWeb.AuthController do
   end
 
   defp send_access_token(user_id, username, conn) do
-    user_id = UUID.binary_to_string!(user_id)
     token = Phoenix.Token.sign(ChatWeb.Endpoint, "access", %{id: user_id, username: username})
     conn 
     |> put_session(:user_id, user_id)
