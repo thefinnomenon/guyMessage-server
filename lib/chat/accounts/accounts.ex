@@ -19,6 +19,7 @@ defmodule Chat.Accounts do
   """
   def list_users do
     Repo.all(User)
+    |> Enum.map(fn(user) -> %{:id => user.id, :username => user.username} end)
   end
 
   @doc """

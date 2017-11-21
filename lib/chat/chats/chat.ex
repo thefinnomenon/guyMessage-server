@@ -31,12 +31,14 @@ defmodule Chat.Chats.Chat do
             select: participant.conversation_id
     conversations = Repo.all(query)
 
+    IO.inspect(conversations)
+
     # Retrieve conversations (including participants and messages)
     query = from conversation in Conversation,
             where: conversation.id in ^conversations, 
-            join: participants in assoc(conversation, :participants),
-            join: messages in assoc(conversation, :messages),
-            join: user in assoc(participants, :user),
+            left_join: participants in assoc(conversation, :participants),
+            left_join: messages in assoc(conversation, :messages),
+            left_join: user in assoc(participants, :user),
             preload: [participants: {participants, user: user}, messages: {messages, user: user}]
 
     conversations = Repo.all(query)

@@ -18,9 +18,9 @@ defmodule ChatWeb.AuthController do
   @doc """
   Retrieves a list of users
   """
-  def get_user_list() do
-    Repo.all(User)
-    |> Enum.map(fn(user) -> %{:id => user.id, :username => user.username} end)
+  def get_user_list(conn, _params) do
+    conn 
+    |> json(Accounts.list_users()) 
   end
 
   @doc """
@@ -28,6 +28,7 @@ defmodule ChatWeb.AuthController do
    Return a Phoenix token for the user
   """
   def login(conn, _params) do
+    IO.inspect(conn)
   	%{:body_params => %{"username" => username}} = conn
 
     query = from u in "users", where: u.username == ^username, select: u.id
@@ -56,10 +57,11 @@ defmodule ChatWeb.AuthController do
   defp send_access_token(user_id, username, conn) do
     token = Phoenix.Token.sign(ChatWeb.Endpoint, "access", %{id: user_id, username: username})
     conn 
-    |> put_session(:user_id, user_id)
-    |> put_session(:username, username)
-    |> put_resp_cookie("user_token", token, max_age: 24*60*60)
-    |> put_resp_cookie("username", username, max_age: 24*60*60)
-    |> send_resp(200, "") #redirect(to: "/chat")
+    # |> put_session(:user_id, user_id)
+    # |> put_session(:username, username)
+    # |> put_resp_cookie("user_token", token, max_age: 24*60*60)
+    # |> put_resp_cookie("username", username, max_age: 24*60*60)
+    # |> send_resp(200, "") #redirect(to: "/chat")
+    |> json(%{token: token, username: username, user_id: user_id})
   end
 end

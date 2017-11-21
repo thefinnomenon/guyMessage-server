@@ -26,10 +26,17 @@ defmodule ChatWeb.Router do
     get "/users", AuthController, :get_user_list
   end
 
-  scope "/chat", ChatWeb do
-    pipe_through :browser
+  scope "/api/auth", ChatWeb do
+    pipe_through :api
+
+    post "/", AuthController, :login
+  end
+
+  scope "/api/", ChatWeb do
     pipe_through :secure_api
 
-    get "/", ChatController, :index
+    get "/chat", ChatController, :index
+    get "/users", AuthController, :get_user_list
+    get "/auth/logout", AuthController, :logout
   end
 end
